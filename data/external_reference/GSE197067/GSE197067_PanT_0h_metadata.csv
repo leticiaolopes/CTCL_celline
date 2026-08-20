@@ -1,0 +1,5 @@
+sample,donor,cell_type,condition,activation,time,dataset
+D1,D1,Pan T,Healthy,Resting,0h,GSE197067
+D2,D2,Pan T,Healthy,Resting,0h,GSE197067
+D3,D3,Pan T,Healthy,Resting,0h,GSE197067
+D4,D4,Pan T,Healthy,Resting,0h,GSE197067

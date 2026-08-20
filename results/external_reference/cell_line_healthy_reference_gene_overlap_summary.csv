@@ -1,0 +1,9 @@
+cell_line,direction,overlap_PanT,overlap_CD4,overlap_both
+HH,Up,78,80,62
+MyLa,Up,123,120,96
+HuT 78,Up,166,170,130
+SeAx,Up,105,112,83
+HH,Down,150,144,113
+MyLa,Down,94,94,72
+HuT 78,Down,64,65,49
+SeAx,Down,92,85,69

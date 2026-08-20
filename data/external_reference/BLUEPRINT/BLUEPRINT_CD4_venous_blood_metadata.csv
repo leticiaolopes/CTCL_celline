@@ -1,0 +1,9 @@
+sample_id,AtlasAssayGroup,cell_type,organism_part,disease,age,sex,ethnic_group
+ERR186009,g5,"CD4-positive, alpha-beta T cell",venous blood,normal,60 to 65 year,female,Northern European
+ERR567612,g5,"CD4-positive, alpha-beta T cell",venous blood,normal,60 to 65 year,male,not available
+ERR567614,g5,"CD4-positive, alpha-beta T cell",venous blood,normal,50 to 55 year,female,Northern European
+ERR567616,g5,"CD4-positive, alpha-beta T cell",venous blood,normal,50 to 55 year,male,not available
+ERR567620,g5,"CD4-positive, alpha-beta T cell",venous blood,normal,45 to 50 year,female,not available
+ERR650557,g5,"CD4-positive, alpha-beta T cell",venous blood,normal,45 to 50 year,male,not available
+ERR650558,g5,"CD4-positive, alpha-beta T cell",venous blood,normal,60 to 65 year,female,not available
+ERR650559,g5,"CD4-positive, alpha-beta T cell",venous blood,normal,60 to 65 year,female,not available

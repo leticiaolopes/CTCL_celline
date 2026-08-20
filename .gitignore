@@ -1,0 +1,27 @@
+# local r & rstudio files
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# adobe illustrator
+*.ai
+
+# raw sequencing data
+data/fastq/
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+
+# large reference file downloaded separately
+data/reference/*.gtf.gz
+
+# local docs
+docs/
+
+# system files
+.DS_Store
+Thumbs.db
+
