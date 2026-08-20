@@ -25,3 +25,7 @@ docs/
 .DS_Store
 Thumbs.db
 
+# local project settings
+scripts/00_aesthetics.R
+scripts/00_config.R
+
