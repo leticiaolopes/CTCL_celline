@@ -6,12 +6,22 @@ source("scripts/00_config.R")
 if (!requireNamespace("magick", quietly = TRUE)) {
   stop("Package 'magick' is required. Install it with install.packages('magick').")}
 
-supplementary_dir <- file.path(paths$figures, "supplementary")
+gene_scope <- getOption("ctcl.gene_scope", "all")
+if (!gene_scope %in% c("all", "protein_coding")) {
+  stop("Unsupported ctcl.gene_scope: ", gene_scope)
+}
+analysis_suffix <- if (gene_scope == "protein_coding") "_protein_coding" else ""
+
+supplementary_dir <- file.path(paths$figures, paste0("supplementary", analysis_suffix))
 dir.create(supplementary_dir, recursive = TRUE, showWarnings = FALSE)
 
-sample_identity_dir <- file.path(paths$figures, "drafts", "deseq2", "sample_identity")
+deseq2_figures_dir <- file.path(paths$figures, "drafts", paste0("deseq2", analysis_suffix))
+external_figures_dir <- file.path(paths$figures, "drafts", paste0("external_reference", analysis_suffix))
+functional_figures_dir <- file.path(paths$figures, "drafts", paste0("functional_enrichment", analysis_suffix))
 
-differential_expression_dir <- file.path(paths$figures, "drafts", "deseq2", "differential_expression")
+sample_identity_dir <- file.path(deseq2_figures_dir, "sample_identity")
+
+differential_expression_dir <- file.path(deseq2_figures_dir, "differential_expression")
 
 render_density <- 300
 
@@ -141,11 +151,11 @@ assemble_figure <- function(source_files, output_stem, ncol, nrow, page_size = a
   invisible(pdf_file)}
 
 # sup fig 1: qc
-s1_files <- c(file.path(paths$figures, "drafts", "deseq2", "PCA_vst_original_identity.pdf"), file.path(paths$figures,
-  "drafts", "deseq2", "PCA_vst_inferred_identity.pdf"), file.path(paths$figures, "drafts", "deseq2",
-  "sample_correlation_original_identity.pdf"), file.path(paths$figures, "drafts", "deseq2", "sample_correlation_inferred_identity.pdf"),
-  file.path(paths$figures, "drafts", "deseq2", "sample_distance_original_identity.pdf"), file.path(paths$figures,
-    "drafts", "deseq2", "sample_distance_inferred_identity.pdf"), file.path(sample_identity_dir,
+s1_files <- c(file.path(deseq2_figures_dir, "PCA_vst_original_identity.pdf"), file.path(deseq2_figures_dir,
+  "PCA_vst_inferred_identity.pdf"), file.path(deseq2_figures_dir,
+  "sample_correlation_original_identity.pdf"), file.path(deseq2_figures_dir, "sample_correlation_inferred_identity.pdf"),
+  file.path(deseq2_figures_dir, "sample_distance_original_identity.pdf"), file.path(deseq2_figures_dir,
+    "sample_distance_inferred_identity.pdf"), file.path(sample_identity_dir,
     "internal_identity_signature_original.pdf"), file.path(sample_identity_dir, "internal_identity_signature_inferred.pdf"))
 
 assemble_figure(source_files = s1_files, output_stem = "Supplementary_Figure_S1_QC_sample_identity",
@@ -165,11 +175,11 @@ assemble_figure(source_files = s2_files, output_stem = "Supplementary_Figure_S2_
   ncol = 2, nrow = 4, page_size = a4_portrait)
 
 # sup figure s3: external healthy reference validation
-s3_files <- c(file.path(paths$figures, "drafts", "external_reference", "cross_dataset_correlation_heatmap.pdf"),
-  file.path(paths$figures, "drafts", "external_reference", "BLUEPRINT_CD4_PCA.pdf"), file.path(paths$figures,
-    "drafts", "external_reference", "BLUEPRINT_CD4_PCA_top500_variable_genes.pdf"), file.path(paths$figures,
-    "drafts", "external_reference", "GSE197067_PanT_0h_PCA.pdf"), file.path(paths$figures, "drafts",
-    "external_reference", "cross_dataset_rank_PCA.pdf"), file.path(paths$figures, "drafts", "external_reference",
+s3_files <- c(file.path(external_figures_dir, "cross_dataset_correlation_heatmap.pdf"),
+  file.path(external_figures_dir, "BLUEPRINT_CD4_PCA.pdf"), file.path(external_figures_dir,
+    "BLUEPRINT_CD4_PCA_top500_variable_genes.pdf"), file.path(external_figures_dir,
+    "GSE197067_PanT_0h_PCA.pdf"), file.path(external_figures_dir,
+    "cross_dataset_rank_PCA.pdf"), file.path(external_figures_dir,
     "cross_dataset_spearman_MDS.pdf"))
 
 assemble_figure(source_files = s3_files, output_stem = "Supplementary_Figure_S3_external_reference_validation",
@@ -177,16 +187,16 @@ assemble_figure(source_files = s3_files, output_stem = "Supplementary_Figure_S3_
     "Cross-dataset Spearman MDS"))
 
 # sup figure s4: modules and functional enrichment
-s4_files <- c(file.path(paths$figures, "drafts", "functional_enrichment", "gene_module_expression_patterns.pdf"),
-  file.path(paths$figures, "drafts", "external_reference", "gene_module_activity_healthy_references.pdf"),
-  file.path(paths$figures, "drafts", "functional_enrichment", "GO_BP_gene_modules_rrvgo_dotplot.pdf"),
-  file.path(paths$figures, "drafts", "functional_enrichment", "GO_BP_GSEA_one_vs_rest.pdf"))
+s4_files <- c(file.path(functional_figures_dir, "gene_module_expression_patterns.pdf"),
+  file.path(external_figures_dir, "gene_module_activity_healthy_references.pdf"),
+  file.path(functional_figures_dir, "GO_BP_gene_modules_rrvgo_dotplot.pdf"),
+  file.path(functional_figures_dir, "GO_BP_GSEA_one_vs_rest.pdf"))
 
 assemble_figure(source_files = s4_files, output_stem = "Supplementary_Figure_S4_modules_functional_enrichment",
   ncol = 2, nrow = 2, page_size = a4_landscape, panel_titles = rep("", 4), row_weights = c(0.3, 0.7))
 
 # sup figure s5: gene overlaps
-s5_files <- c(file.path(paths$figures, "drafts", "external_reference", "Venn_cell_lines_healthy_reference_overlap.pdf"))
+s5_files <- c(file.path(external_figures_dir, "Venn_cell_lines_healthy_reference_overlap.pdf"))
 
 assemble_figure(source_files = s5_files, output_stem = "Supplementary_Figure_S5_gene_overlaps", ncol = 1,
   nrow = 1, page_size = a4_landscape, show_labels = FALSE)

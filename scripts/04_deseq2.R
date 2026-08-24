@@ -10,10 +10,17 @@ library(tibble)
 library(ggplot2)
 library(pheatmap)
 
+# Analysis scope. The default preserves the original all-gene workflow.
+gene_scope <- getOption("ctcl.gene_scope", "all")
+if (!gene_scope %in% c("all", "protein_coding")) {
+  stop("Unsupported ctcl.gene_scope: ", gene_scope)
+}
+analysis_suffix <- if (gene_scope == "protein_coding") "_protein_coding" else ""
+
 # directories
-deseq2_dir <- file.path(paths$results, "deseq2")
-qc_dir <- file.path(paths$qc, "deseq2")
-figures_dir <- file.path(paths$figures, "drafts", "deseq2")
+deseq2_dir <- file.path(paths$results, paste0("deseq2", analysis_suffix))
+qc_dir <- file.path(paths$qc, paste0("deseq2", analysis_suffix))
+figures_dir <- file.path(paths$figures, "drafts", paste0("deseq2", analysis_suffix))
 
 dir.create(deseq2_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(qc_dir, recursive = TRUE, showWarnings = FALSE)
@@ -80,16 +87,77 @@ p_genes
 
 save_double(file.path(figures_dir, "detected_genes.pdf"), p_genes, height = height_small)
 
-# filter low count
-keep <- rowSums(count_matrix >= 10) >= 3
+# define the analysis gene universe before low-count filtering
+count_matrix_analysis <- count_matrix
+
+if (gene_scope == "protein_coding") {
+  annotation_rds <- file.path(deseq2_dir, "gencode_v50_gene_annotation.rds")
+
+  if (file.exists(annotation_rds)) {
+    gene_annotation <- readRDS(annotation_rds)
+  } else {
+    gtf <- rtracklayer::import(
+      file.path(paths$data, "reference", "gencode.v50.annotation.gtf.gz"),
+      feature.type = "gene")
+
+    gene_annotation <- as.data.frame(gtf) |>
+      dplyr::filter(type == "gene") |>
+      dplyr::transmute(
+        Geneid = gene_id,
+        Ensembl = stringr::str_remove(gene_id, "\\.\\d+$"),
+        gene_symbol = gene_name,
+        gene_type = gene_type) |>
+      dplyr::distinct(Geneid, .keep_all = TRUE)
+
+    saveRDS(gene_annotation, annotation_rds)
+    readr::write_csv(
+      gene_annotation,
+      file.path(deseq2_dir, "gencode_v50_gene_annotation.csv"))
+  }
+
+  annotation_match_rate <- mean(rownames(count_matrix) %in% gene_annotation$Geneid)
+  if (annotation_match_rate < 0.95) {
+    stop(
+      "Only ", scales::percent(annotation_match_rate, accuracy = 0.1),
+      " of count-matrix genes matched GENCODE v50 gene IDs.")
+  }
+
+  protein_coding_ids <- gene_annotation |>
+    dplyr::filter(gene_type == "protein_coding") |>
+    dplyr::pull(Geneid)
+
+  count_matrix_analysis <- count_matrix[
+    rownames(count_matrix) %in% protein_coding_ids,
+    ,
+    drop = FALSE]
+
+  saveRDS(
+    protein_coding_ids,
+    file.path(deseq2_dir, "protein_coding_gene_ids.rds"))
+}
+
+# filter low count within the selected gene universe
+keep <- rowSums(count_matrix_analysis >= 10) >= 3
 table(keep)
 
-count_matrix_filtered <- count_matrix[keep, ]
+count_matrix_filtered <- count_matrix_analysis[keep, , drop = FALSE]
 dim(count_matrix)
+dim(count_matrix_analysis)
 dim(count_matrix_filtered)
 
-filter_summary <- tibble(metric = c("Genes before filtering", "Genes after filtering", "Genes removed"),
-  value = c(nrow(count_matrix), nrow(count_matrix_filtered), nrow(count_matrix) - nrow(count_matrix_filtered)))
+filter_summary <- tibble(
+  metric = c(
+    "Genes in raw count matrix",
+    "Genes in selected biotype universe",
+    "Genes after low-count filtering",
+    "Genes removed by biotype filtering",
+    "Genes removed by low-count filtering"),
+  value = c(
+    nrow(count_matrix),
+    nrow(count_matrix_analysis),
+    nrow(count_matrix_filtered),
+    nrow(count_matrix) - nrow(count_matrix_analysis),
+    nrow(count_matrix_analysis) - nrow(count_matrix_filtered)))
 filter_summary
 
 write.csv(filter_summary, file.path(qc_dir, "gene_filter_summary.csv"), row.names = FALSE)
@@ -254,8 +322,10 @@ saveRDS(count_matrix_filtered, file.path(deseq2_dir, "count_matrix_filtered.rds"
 # summary
 cat("\nDESeq2 preparation completed\n")
 cat("----------------------------\n")
+cat("Gene scope:", gene_scope, "\n")
 cat("Samples:", ncol(dds), "\n")
-cat("Genes before filtering:", nrow(count_matrix), "\n")
+cat("Genes in raw matrix:", nrow(count_matrix), "\n")
+cat("Genes in selected biotype universe:", nrow(count_matrix_analysis), "\n")
 cat("Genes after filtering:", nrow(dds), "\n")
 cat("Design: ~ cell_line_model\n\n")
 

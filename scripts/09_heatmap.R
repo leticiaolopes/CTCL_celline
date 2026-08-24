@@ -4,13 +4,32 @@
 source("scripts/00_config.R")
 source("scripts/00_aesthetics.R")
 
-figures_external_dir <- file.path(paths$figures, "drafts", "external_reference")
+# Analysis scope. The default preserves the original all-gene workflow.
+gene_scope <- getOption("ctcl.gene_scope", "all")
+if (!gene_scope %in% c("all", "protein_coding")) {
+  stop("Unsupported ctcl.gene_scope: ", gene_scope)
+}
+analysis_suffix <- if (gene_scope == "protein_coding") "_protein_coding" else ""
+
+figures_external_dir <- file.path(
+  paths$figures,
+  "drafts",
+  paste0("external_reference", analysis_suffix))
+functional_enrichment_dir <- file.path(
+  paths$results,
+  paste0("functional_enrichment", analysis_suffix))
+deseq2_dir <- file.path(paths$results, paste0("deseq2", analysis_suffix))
+differential_expression_dir <- file.path(
+  paths$results,
+  paste0("differential_expression", analysis_suffix))
+
+dir.create(figures_external_dir, recursive = TRUE, showWarnings = FALSE)
 
 # load upstream results
-one_vs_rest <- readr::read_csv(file.path(paths$results, "functional_enrichment", "one_vs_rest_DESeq2_results.csv"),
+one_vs_rest <- readr::read_csv(file.path(functional_enrichment_dir, "one_vs_rest_DESeq2_results.csv"),
   show_col_types = FALSE)
 
-dds <- readRDS(file.path(paths$results, "deseq2", "dds.rds"))
+dds <- readRDS(file.path(deseq2_dir, "dds.rds"))
 
 cell_line_metadata <- SummarizedExperiment::colData(dds) |>
   as.data.frame() |>
@@ -24,7 +43,15 @@ top50_genes <- one_vs_rest |>
   dplyr::distinct(Ensembl, .keep_all = TRUE) |>
   dplyr::slice_head(n = 50)
 
-vst_matrix <- readRDS(file.path(paths$results, "deseq2", "vst_matrix.rds"))
+vst_matrix <- readRDS(file.path(deseq2_dir, "vst_matrix.rds"))
+
+if (gene_scope == "protein_coding") {
+  protein_coding_ids <- readRDS(
+    file.path(deseq2_dir, "protein_coding_gene_ids.rds"))
+  if (!all(rownames(vst_matrix) %in% protein_coding_ids)) {
+    stop("The heatmap VST matrix contains non-protein-coding genes.")
+  }
+}
 
 rownames(vst_matrix) <- stringr::str_remove(rownames(vst_matrix), "\\.\\d+$")
 
@@ -44,7 +71,8 @@ complete_genes <- apply(top50_matrix_z, 1, function(x) all(is.finite(x)))
 
 top50_matrix_z <- top50_matrix_z[complete_genes, , drop = FALSE]
 
-all_shrunk_results_annotated <- readRDS(file.path(paths$results, "differential_expression", "all_shrunk_results_annotated.rds"))
+all_shrunk_results_annotated <- readRDS(
+  file.path(differential_expression_dir, "all_shrunk_results_annotated.rds"))
 
 gene_label_map <- all_shrunk_results_annotated |>
   dplyr::select(Ensembl, gene_symbol) |>

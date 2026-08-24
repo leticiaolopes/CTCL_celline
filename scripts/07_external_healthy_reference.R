@@ -13,12 +13,25 @@ library(ExpressionAtlas)
 library(DESeq2)
 library(edgeR)
 
+# Analysis scope. The default preserves the original all-gene workflow.
+gene_scope <- getOption("ctcl.gene_scope", "all")
+if (!gene_scope %in% c("all", "protein_coding")) {
+  stop("Unsupported ctcl.gene_scope: ", gene_scope)
+}
+analysis_suffix <- if (gene_scope == "protein_coding") "_protein_coding" else ""
+
 external_dir <- file.path(paths$data, "external_reference")
 gse197067_dir <- file.path(external_dir, "GSE197067")
 blueprint_dir <- file.path(external_dir, "BLUEPRINT")
-results_external_dir <- file.path(paths$results, "external_reference")
-figures_external_dir <- file.path(paths$figures, "drafts", "external_reference")
-deseq2_dir <- file.path(paths$results, "deseq2")
+results_external_dir <- file.path(paths$results, paste0("external_reference", analysis_suffix))
+figures_external_dir <- file.path(
+  paths$figures,
+  "drafts",
+  paste0("external_reference", analysis_suffix))
+deseq2_dir <- file.path(paths$results, paste0("deseq2", analysis_suffix))
+functional_enrichment_dir <- file.path(
+  paths$results,
+  paste0("functional_enrichment", analysis_suffix))
 
 dir.create(gse197067_dir, recursive = TRUE, showWarnings = FALSE)
 
@@ -430,7 +443,9 @@ cell_line_annotation <- cell_line_metadata |>
   dplyr::select(analysis_sample_name, analysis_cell_line) |>
   dplyr::distinct()
 
-cell_line_group <- cell_line_annotation$analysis_cell_line[match(colnames(cell_line_logcpm), cell_line_annotation$analysis_sample_name)]
+cell_line_group <- as.character(
+  cell_line_annotation$analysis_cell_line[
+    match(colnames(cell_line_logcpm), cell_line_annotation$analysis_sample_name)])
 
 external_annotation <- data.frame(row.names = colnames(external_comparison_matrix), Dataset = c(rep("Cell lines",
   12), rep("GSE197067", 4), rep("BLUEPRINT", 8)), Group = c(cell_line_group, rep("Healthy Pan T", 4),
@@ -554,7 +569,7 @@ p_external_mds <- ggplot2::ggplot(external_mds_data, ggplot2::aes(x = MDS1, y = 
   color = NULL, shape = NULL) + theme_clean()
 p_external_mds
 
-gene_modules <- readr::read_csv(file.path(paths$results, "functional_enrichment", "gene_module_assignments.csv"),
+gene_modules <- readr::read_csv(file.path(functional_enrichment_dir, "gene_module_assignments.csv"),
   show_col_types = FALSE)
 colnames(gene_modules)
 head(gene_modules)
@@ -629,7 +644,7 @@ pheatmap::pheatmap(module_heatmap_matrix, cluster_rows = FALSE, cluster_cols = F
   filename = file.path(figures_external_dir, "gene_module_activity_healthy_references.pdf"), width = 6.2,
   height = 3.8)
 
-module_go_reduced <- readr::read_csv(file.path(paths$results, "functional_enrichment", "GO_BP_by_gene_module_reduced.csv"),
+module_go_reduced <- readr::read_csv(file.path(functional_enrichment_dir, "GO_BP_by_gene_module_reduced.csv"),
   show_col_types = FALSE)
 colnames(module_go_reduced)
 head(module_go_reduced)

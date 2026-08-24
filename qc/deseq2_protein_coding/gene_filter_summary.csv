@@ -1,0 +1,6 @@
+"metric","value"
+"Genes in raw count matrix",78733
+"Genes in selected biotype universe",20107
+"Genes after low-count filtering",13058
+"Genes removed by biotype filtering",58626
+"Genes removed by low-count filtering",7049

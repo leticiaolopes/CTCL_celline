@@ -17,6 +17,12 @@ suppressPackageStartupMessages({
   library(circlize)
   library(edgeR)})
 
+gene_scope <- getOption("ctcl.gene_scope", "all")
+if (!gene_scope %in% c("all", "protein_coding")) {
+  stop("Unsupported ctcl.gene_scope: ", gene_scope)
+}
+analysis_suffix <- if (gene_scope == "protein_coding") "_protein_coding" else ""
+
 ensure_file <- function(path, fallback_script) {
   if (!file.exists(path)) {
     message("missing object: ", path, "; running ", fallback_script)
@@ -25,15 +31,16 @@ ensure_file <- function(path, fallback_script) {
     stop("required object is still missing: ", path)
   path}
 
-deseq2_dir <- file.path(paths$results, "deseq2")
-de_dir <- file.path(paths$results, "differential_expression")
-functional_dir <- file.path(paths$results, "functional_enrichment")
-external_dir <- file.path(paths$results, "external_reference")
+deseq2_dir <- file.path(paths$results, paste0("deseq2", analysis_suffix))
+de_dir <- file.path(paths$results, paste0("differential_expression", analysis_suffix))
+functional_dir <- file.path(paths$results, paste0("functional_enrichment", analysis_suffix))
+external_dir <- file.path(paths$results, paste0("external_reference", analysis_suffix))
 external_data_dir <- file.path(paths$data, "external_reference")
 
-figures_de_dir <- file.path(paths$figures, "drafts", "deseq2", "differential_expression")
-figures_external_dir <- file.path(paths$figures, "drafts", "external_reference")
-figures_functional_dir <- file.path(paths$figures, "drafts", "functional_enrichment")
+figures_deseq2_dir <- file.path(paths$figures, "drafts", paste0("deseq2", analysis_suffix))
+figures_de_dir <- file.path(figures_deseq2_dir, "differential_expression")
+figures_external_dir <- file.path(paths$figures, "drafts", paste0("external_reference", analysis_suffix))
+figures_functional_dir <- file.path(paths$figures, "drafts", paste0("functional_enrichment", analysis_suffix))
 
 dir.create(figures_de_dir, recursive = TRUE, showWarnings = FALSE)
 dir.create(figures_external_dir, recursive = TRUE, showWarnings = FALSE)
@@ -52,7 +59,7 @@ coldata <- SummarizedExperiment::colData(dds) |>
   tibble::rownames_to_column("original_sample_name")
 
 # s1g-h: identity signature heatmaps 
-identity_figures_dir <- file.path(paths$figures, "drafts", "deseq2", "sample_identity")
+identity_figures_dir <- file.path(figures_deseq2_dir, "sample_identity")
 dir.create(identity_figures_dir, recursive = TRUE, showWarnings = FALSE)
 
 signature_difference <- function(group_a, group_b, n = 50) {
@@ -129,11 +136,11 @@ for (identity_version in c("original", "inferred")) {
     display_names <- coldata$analysis_sample_name
     groups <- as.character(coldata$analysis_cell_line)}
 
-  export_sample_matrix(sample_cor, display_names, groups, file.path(paths$figures, "drafts", "deseq2",
+  export_sample_matrix(sample_cor, display_names, groups, file.path(figures_deseq2_dir,
     paste0("sample_correlation_", identity_version, "_identity.pdf")), "Pearson r", c("#F7F7F7",
     "#C6DED9", "#2A7F7F"), c(cor_min, cor_mid, 1), format(c(cor_min, cor_mid, 1), digits = 2))
 
-  export_sample_matrix(sample_dist, display_names, groups, file.path(paths$figures, "drafts", "deseq2",
+  export_sample_matrix(sample_dist, display_names, groups, file.path(figures_deseq2_dir,
     paste0("sample_distance_", identity_version, "_identity.pdf")), "Distance", c("#FFF7EC", "#F4A582",
     "#B55350"), c(0, dist_max/2, dist_max), format(c(0, dist_max/2, dist_max), trim = TRUE))}
 

@@ -22,13 +22,23 @@ library(tidytext)
 
 BiocParallel::register(BiocParallel::SerialParam())
 
-de_dir <- file.path(paths$results, "differential_expression")
+# Analysis scope. The default preserves the original all-gene workflow.
+gene_scope <- getOption("ctcl.gene_scope", "all")
+if (!gene_scope %in% c("all", "protein_coding")) {
+  stop("Unsupported ctcl.gene_scope: ", gene_scope)
+}
+analysis_suffix <- if (gene_scope == "protein_coding") "_protein_coding" else ""
 
-deseq2_dir <- file.path(paths$results, "deseq2")
+de_dir <- file.path(paths$results, paste0("differential_expression", analysis_suffix))
 
-enrichment_dir <- file.path(paths$results, "functional_enrichment")
+deseq2_dir <- file.path(paths$results, paste0("deseq2", analysis_suffix))
 
-figures_enrichment_dir <- file.path(paths$figures, "drafts", "functional_enrichment")
+enrichment_dir <- file.path(paths$results, paste0("functional_enrichment", analysis_suffix))
+
+figures_enrichment_dir <- file.path(
+  paths$figures,
+  "drafts",
+  paste0("functional_enrichment", analysis_suffix))
 
 dir.create(enrichment_dir, recursive = TRUE, showWarnings = FALSE)
 
@@ -48,6 +58,15 @@ dds <- readRDS(file.path(deseq2_dir, "dds.rds"))
 all_shrunk_results_annotated <- readRDS(file.path(de_dir, "all_shrunk_results_annotated.rds"))
 
 vst_matrix <- readRDS(file.path(deseq2_dir, "vst_matrix.rds"))
+
+if (gene_scope == "protein_coding") {
+  protein_coding_ids <- readRDS(
+    file.path(deseq2_dir, "protein_coding_gene_ids.rds"))
+  if (!all(rownames(dds) %in% protein_coding_ids) ||
+      !all(rownames(vst_matrix) %in% protein_coding_ids)) {
+    stop("Protein-coding enrichment inputs contain genes outside the selected biotype.")
+  }
+}
 
 coldata_enrichment <- colData(dds) |>
   as.data.frame() |>

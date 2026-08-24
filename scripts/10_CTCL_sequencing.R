@@ -1,8 +1,18 @@
 # export final ctcl sequencing figure from the approved png
 source("scripts/00_config.R")
 
-figure_png <- file.path(paths$figures, "CTCL_sequencing.png")
-figure_pdf <- file.path(paths$figures, "CTCL_sequencing.pdf")
+gene_scope <- getOption("ctcl.gene_scope", "all")
+if (!gene_scope %in% c("all", "protein_coding")) {
+  stop("Unsupported ctcl.gene_scope: ", gene_scope)
+}
+analysis_suffix <- if (gene_scope == "protein_coding") "_protein_coding" else ""
+
+figure_png <- file.path(paths$figures, paste0("CTCL_sequencing", analysis_suffix, ".png"))
+figure_pdf <- file.path(paths$figures, paste0("CTCL_sequencing", analysis_suffix, ".pdf"))
+
+if (!file.exists(figure_png)) {
+  stop("Approved main-figure PNG not found: ", figure_png)
+}
 figure_image <- magick::image_read(figure_png)
 figure_info <- magick::image_info(figure_image)
 expected_ratio <- 210/297

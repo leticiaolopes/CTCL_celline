@@ -1,0 +1,109 @@
+representative_ID,module,representative_term,representative_score,p.adjust,Count,GeneRatio,status,minus_log10_padj
+GO:0007156,Module 1,"homophilic cell adhesion via plasma membrane
+adhesion molecules",8.530996845678997,8.583339709420886e-6,78,78/1306,Significant,5.066343698729022
+GO:0007156,Module 2,"homophilic cell adhesion via plasma membrane
+adhesion molecules",8.530996845678997,2.944443019483171e-9,29,29/1076,Significant,8.530996845678997
+GO:0007156,Module 3,"homophilic cell adhesion via plasma membrane
+adhesion molecules",8.530996845678997,NA,NA,NA,NS,NA
+GO:0007156,Module 4,"homophilic cell adhesion via plasma membrane
+adhesion molecules",8.530996845678997,NA,NA,NA,NS,NA
+GO:0007156,Module 5,"homophilic cell adhesion via plasma membrane
+adhesion molecules",8.530996845678997,4.540632915079443e-4,58,58/1027,Significant,3.342883606973608
+GO:0007156,Module 6,"homophilic cell adhesion via plasma membrane
+adhesion molecules",8.530996845678997,NA,NA,NA,NS,NA
+GO:0007389,Module 1,pattern specification process,8.530996845678997,NA,NA,NA,NS,NA
+GO:0007389,Module 2,pattern specification process,8.530996845678997,2.944443019483171e-9,69,69/1076,Significant,8.530996845678997
+GO:0007389,Module 3,pattern specification process,8.530996845678997,NA,NA,NA,NS,NA
+GO:0007389,Module 4,pattern specification process,8.530996845678997,NA,NA,NA,NS,NA
+GO:0007389,Module 5,pattern specification process,8.530996845678997,0.0031533641576736602,45,45/1027,Significant,2.5012258730402324
+GO:0007389,Module 6,pattern specification process,8.530996845678997,NA,NA,NA,NS,NA
+GO:0072001,Module 1,renal system development,8.302910356607985,0.02185860719049488,14,14/1306,Significant,1.6603775143329536
+GO:0072001,Module 2,renal system development,8.302910356607985,4.9783983426019005e-9,54,54/1076,Significant,8.302910356607985
+GO:0072001,Module 3,renal system development,8.302910356607985,NA,NA,NA,NS,NA
+GO:0072001,Module 4,renal system development,8.302910356607985,NA,NA,NA,NS,NA
+GO:0072001,Module 5,renal system development,8.302910356607985,NA,NA,NA,NS,NA
+GO:0072001,Module 6,renal system development,8.302910356607985,NA,NA,NA,NS,NA
+GO:0001763,Module 1,morphogenesis of a branching structure,7.22818023489039,NA,NA,NA,NS,NA
+GO:0001763,Module 2,morphogenesis of a branching structure,7.22818023489039,5.913161833815823e-8,37,37/1076,Significant,7.22818023489039
+GO:0001763,Module 3,morphogenesis of a branching structure,7.22818023489039,NA,NA,NA,NS,NA
+GO:0001763,Module 4,morphogenesis of a branching structure,7.22818023489039,NA,NA,NA,NS,NA
+GO:0001763,Module 5,morphogenesis of a branching structure,7.22818023489039,NA,NA,NA,NS,NA
+GO:0001763,Module 6,morphogenesis of a branching structure,7.22818023489039,NA,NA,NA,NS,NA
+GO:0001501,Module 1,skeletal system development,6.965644126555984,0.01348970056019383,19,19/1306,Significant,1.8699976905429823
+GO:0001501,Module 2,skeletal system development,6.965644126555984,1.0823204726882262e-7,71,71/1076,Significant,6.965644126555984
+GO:0001501,Module 3,skeletal system development,6.965644126555984,NA,NA,NA,NS,NA
+GO:0001501,Module 4,skeletal system development,6.965644126555984,NA,NA,NA,NS,NA
+GO:0001501,Module 5,skeletal system development,6.965644126555984,0.03664342966349085,48,48/1027,Significant,1.4360038850527101
+GO:0001501,Module 6,skeletal system development,6.965644126555984,NA,NA,NA,NS,NA
+GO:0007186,Module 1,G protein-coupled receptor signaling pathway,6.903410661858406,0.0011126221154173672,30,30/1306,Significant,2.953652311905282
+GO:0007186,Module 2,G protein-coupled receptor signaling pathway,6.903410661858406,1.2490773642113466e-7,80,80/1076,Significant,6.903410661858406
+GO:0007186,Module 3,G protein-coupled receptor signaling pathway,6.903410661858406,NA,NA,NA,NS,NA
+GO:0007186,Module 4,G protein-coupled receptor signaling pathway,6.903410661858406,NA,NA,NA,NS,NA
+GO:0007186,Module 5,G protein-coupled receptor signaling pathway,6.903410661858406,0.044273247297696834,55,55/1027,Significant,1.3538586227749418
+GO:0007186,Module 6,G protein-coupled receptor signaling pathway,6.903410661858406,NA,NA,NA,NS,NA
+GO:0002250,Module 1,adaptive immune response,5.75030076797922,1.4915199462407148e-4,69,69/1306,Significant,3.82637093440091
+GO:0002250,Module 2,adaptive immune response,5.75030076797922,0.004653472915173925,19,19/1076,Significant,2.332222809488254
+GO:0002250,Module 3,adaptive immune response,5.75030076797922,NA,NA,NA,NS,NA
+GO:0002250,Module 4,adaptive immune response,5.75030076797922,NA,NA,NA,NS,NA
+GO:0002250,Module 5,adaptive immune response,5.75030076797922,1.777048299890627e-6,66,66/1027,Significant,5.75030076797922
+GO:0002250,Module 6,adaptive immune response,5.75030076797922,NA,NA,NA,NS,NA
+GO:0019221,Module 1,cytokine-mediated signaling pathway,5.314775543452757,4.844226672095912e-6,77,77/1306,Significant,5.314775543452757
+GO:0019221,Module 2,cytokine-mediated signaling pathway,5.314775543452757,3.0625706764555235e-4,19,19/1076,Significant,3.5139138800835883
+GO:0019221,Module 3,cytokine-mediated signaling pathway,5.314775543452757,NA,NA,NA,NS,NA
+GO:0019221,Module 4,cytokine-mediated signaling pathway,5.314775543452757,NA,NA,NA,NS,NA
+GO:0019221,Module 5,cytokine-mediated signaling pathway,5.314775543452757,0.02255417487370782,19,19/1027,Significant,1.6467730565889007
+GO:0019221,Module 6,cytokine-mediated signaling pathway,5.314775543452757,NA,NA,NA,NS,NA
+GO:0001764,Module 1,neuron migration,4.952501649359013,0.009029958251723976,34,34/1306,Significant,2.0443142575588995
+GO:0001764,Module 2,neuron migration,4.952501649359013,1.1155739146279353e-5,32,32/1076,Significant,4.952501649359013
+GO:0001764,Module 3,neuron migration,4.952501649359013,NA,NA,NA,NS,NA
+GO:0001764,Module 4,neuron migration,4.952501649359013,NA,NA,NA,NS,NA
+GO:0001764,Module 5,neuron migration,4.952501649359013,2.1390219488269898e-4,47,47/1027,Significant,3.6697847590443953
+GO:0001764,Module 6,neuron migration,4.952501649359013,NA,NA,NA,NS,NA
+GO:0002274,Module 1,myeloid leukocyte activation,4.568433959494716,4.435193405144977e-5,91,91/1306,Significant,4.353087437172541
+GO:0002274,Module 2,myeloid leukocyte activation,4.568433959494716,0.03651229030362327,6,6/1076,Significant,1.437560924239299
+GO:0002274,Module 3,myeloid leukocyte activation,4.568433959494716,NA,NA,NA,NS,NA
+GO:0002274,Module 4,myeloid leukocyte activation,4.568433959494716,NA,NA,NA,NS,NA
+GO:0002274,Module 5,myeloid leukocyte activation,4.568433959494716,2.7012578408513422e-5,38,38/1027,Significant,4.568433959494716
+GO:0002274,Module 6,myeloid leukocyte activation,4.568433959494716,NA,NA,NA,NS,NA
+GO:0040013,Module 1,negative regulation of locomotion,4.522364931201541,6.302656658951617e-4,58,58/1306,Significant,3.2004763506856033
+GO:0040013,Module 2,negative regulation of locomotion,4.522364931201541,3.0035514023341567e-5,48,48/1076,Significant,4.522364931201541
+GO:0040013,Module 3,negative regulation of locomotion,4.522364931201541,NA,NA,NA,NS,NA
+GO:0040013,Module 4,negative regulation of locomotion,4.522364931201541,NA,NA,NA,NS,NA
+GO:0040013,Module 5,negative regulation of locomotion,4.522364931201541,7.097751416834005e-5,68,68/1027,Significant,4.148879214933166
+GO:0040013,Module 6,negative regulation of locomotion,4.522364931201541,NA,NA,NA,NS,NA
+GO:0051606,Module 1,detection of stimulus,4.420238380652834,3.799807707638298e-5,35,35/1306,Significant,4.420238380652834
+GO:0051606,Module 2,detection of stimulus,4.420238380652834,NA,NA,NA,NS,NA
+GO:0051606,Module 3,detection of stimulus,4.420238380652834,NA,NA,NA,NS,NA
+GO:0051606,Module 4,detection of stimulus,4.420238380652834,NA,NA,NA,NS,NA
+GO:0051606,Module 5,detection of stimulus,4.420238380652834,NA,NA,NA,NS,NA
+GO:0051606,Module 6,detection of stimulus,4.420238380652834,NA,NA,NA,NS,NA
+GO:0044057,Module 1,regulation of system process,4.353087437172541,4.435193405144977e-5,67,67/1306,Significant,4.353087437172541
+GO:0044057,Module 2,regulation of system process,4.353087437172541,4.331348248579112e-4,20,20/1076,Significant,3.363376896769814
+GO:0044057,Module 3,regulation of system process,4.353087437172541,0.008289449044047928,39,39/604,Significant,2.081474333753867
+GO:0044057,Module 4,regulation of system process,4.353087437172541,NA,NA,NA,NS,NA
+GO:0044057,Module 5,regulation of system process,4.353087437172541,NA,NA,NA,NS,NA
+GO:0044057,Module 6,regulation of system process,4.353087437172541,NA,NA,NA,NS,NA
+GO:0050727,Module 1,regulation of inflammatory response,3.8762545996780227,1.3296746843851197e-4,55,55/1306,Significant,3.8762545996780227
+GO:0050727,Module 2,regulation of inflammatory response,3.8762545996780227,3.491188597641021e-4,61,61/1076,Significant,3.4570266895122588
+GO:0050727,Module 3,regulation of inflammatory response,3.8762545996780227,NA,NA,NA,NS,NA
+GO:0050727,Module 4,regulation of inflammatory response,3.8762545996780227,NA,NA,NA,NS,NA
+GO:0050727,Module 5,regulation of inflammatory response,3.8762545996780227,0.0014553519420095248,12,12/1027,Significant,2.8370319702587836
+GO:0050727,Module 6,regulation of inflammatory response,3.8762545996780227,NA,NA,NA,NS,NA
+GO:0090130,Module 1,tissue migration,3.6697847590443953,0.0439850919092686,11,11/1306,Significant,1.356694496210046
+GO:0090130,Module 2,tissue migration,3.6697847590443953,0.029703390848083898,26,26/1076,Significant,1.5271939701254362
+GO:0090130,Module 3,tissue migration,3.6697847590443953,NA,NA,NA,NS,NA
+GO:0090130,Module 4,tissue migration,3.6697847590443953,NA,NA,NA,NS,NA
+GO:0090130,Module 5,tissue migration,3.6697847590443953,2.1390219488269898e-4,44,44/1027,Significant,3.6697847590443953
+GO:0090130,Module 6,tissue migration,3.6697847590443953,NA,NA,NA,NS,NA
+GO:0001819,Module 1,positive regulation of cytokine production,3.6253445532495476,4.09653138813845e-4,69,69/1306,Significant,3.3875837131729236
+GO:0001819,Module 2,positive regulation of cytokine production,3.6253445532495476,0.03544583785287326,48,48/1076,Significant,1.4504347535317574
+GO:0001819,Module 3,positive regulation of cytokine production,3.6253445532495476,NA,NA,NA,NS,NA
+GO:0001819,Module 4,positive regulation of cytokine production,3.6253445532495476,NA,NA,NA,NS,NA
+GO:0001819,Module 5,positive regulation of cytokine production,3.6253445532495476,2.3694930911904676e-4,59,59/1027,Significant,3.6253445532495476
+GO:0001819,Module 6,positive regulation of cytokine production,3.6253445532495476,NA,NA,NA,NS,NA
+GO:0071805,Module 1,potassium ion transmembrane transport,2.226203499413416,0.015080415472290724,6,6/1306,Significant,1.8215866932913338
+GO:0071805,Module 2,potassium ion transmembrane transport,2.226203499413416,0.011493864723563162,13,13/1076,Significant,1.939533918578324
+GO:0071805,Module 3,potassium ion transmembrane transport,2.226203499413416,0.0059401375356814504,20,20/604,Significant,2.226203499413416
+GO:0071805,Module 4,potassium ion transmembrane transport,2.226203499413416,NA,NA,NA,NS,NA
+GO:0071805,Module 5,potassium ion transmembrane transport,2.226203499413416,0.027719479354398627,8,8/1027,Significant,1.5572149311899277
+GO:0071805,Module 6,potassium ion transmembrane transport,2.226203499413416,NA,NA,NA,NS,NA

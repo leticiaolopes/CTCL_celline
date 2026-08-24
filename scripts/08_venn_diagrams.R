@@ -7,14 +7,35 @@ source("scripts/00_aesthetics.R")
 library(ggVennDiagram)
 library(patchwork)
 
+# Analysis scope. The default preserves the original all-gene workflow.
+gene_scope <- getOption("ctcl.gene_scope", "all")
+if (!gene_scope %in% c("all", "protein_coding")) {
+  stop("Unsupported ctcl.gene_scope: ", gene_scope)
+}
+analysis_suffix <- if (gene_scope == "protein_coding") "_protein_coding" else ""
+
 # input and output paths
-results_external_dir <- file.path(paths$results, "external_reference")
-figures_external_dir <- file.path(paths$figures, "drafts", "external_reference")
+results_external_dir <- file.path(paths$results, paste0("external_reference", analysis_suffix))
+figures_external_dir <- file.path(
+  paths$figures,
+  "drafts",
+  paste0("external_reference", analysis_suffix))
+functional_enrichment_dir <- file.path(
+  paths$results,
+  paste0("functional_enrichment", analysis_suffix))
+
+dir.create(results_external_dir, recursive = TRUE, showWarnings = FALSE)
+dir.create(figures_external_dir, recursive = TRUE, showWarnings = FALSE)
 
 reference_cache_file <- file.path(results_external_dir, "external_rank_reference.rds")
 
 if (!file.exists(reference_cache_file)) {
-  stop("Missing external-reference cache. Run scripts/07_external_healthy_reference.R first.")}
+  prerequisite <- if (gene_scope == "protein_coding") {
+    "scripts/07b_external_healthy_reference_protein_coding.R"
+  } else {
+    "scripts/07_external_healthy_reference.R"
+  }
+  stop("Missing external-reference cache. Run ", prerequisite, " first.")}
 
 reference_cache <- readRDS(reference_cache_file)
 external_rank_matrix <- reference_cache$external_rank_matrix
@@ -22,8 +43,14 @@ gse_samples <- reference_cache$gse_samples
 blueprint_samples <- reference_cache$blueprint_samples
 
 # cell-line overlaps
-one_vs_rest <- readr::read_csv(file.path(paths$results, "functional_enrichment", "one_vs_rest_DESeq2_results.csv"),
+one_vs_rest <- readr::read_csv(file.path(functional_enrichment_dir, "one_vs_rest_DESeq2_results.csv"),
   show_col_types = FALSE)
+
+if (gene_scope == "protein_coding" &&
+    "gene_type" %in% colnames(one_vs_rest) &&
+    any(one_vs_rest$gene_type != "protein_coding", na.rm = TRUE)) {
+  stop("The one-vs-rest input contains non-protein-coding genes.")
+}
 
 colnames(one_vs_rest)
 

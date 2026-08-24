@@ -21,12 +21,23 @@ library(circlize)
 library(org.Hs.eg.db)
 library(AnnotationDbi)
 
+# Analysis scope. The default preserves the original all-gene workflow.
+gene_scope <- getOption("ctcl.gene_scope", "all")
+if (!gene_scope %in% c("all", "protein_coding")) {
+  stop("Unsupported ctcl.gene_scope: ", gene_scope)
+}
+analysis_suffix <- if (gene_scope == "protein_coding") "_protein_coding" else ""
+
 # paths
-deseq2_dir <- file.path(paths$results, "deseq2")
+deseq2_dir <- file.path(paths$results, paste0("deseq2", analysis_suffix))
 
-de_dir <- file.path(paths$results, "differential_expression")
+de_dir <- file.path(paths$results, paste0("differential_expression", analysis_suffix))
 
-figures_de_dir <- file.path(paths$figures, "drafts", "deseq2", "differential_expression")
+figures_de_dir <- file.path(
+  paths$figures,
+  "drafts",
+  paste0("deseq2", analysis_suffix),
+  "differential_expression")
 
 dir.create(de_dir, recursive = TRUE, showWarnings = FALSE)
 
@@ -34,6 +45,14 @@ dir.create(figures_de_dir, recursive = TRUE, showWarnings = FALSE)
 
 # load deseq2 object
 dds <- readRDS(file.path(deseq2_dir, "dds.rds"))
+
+if (gene_scope == "protein_coding") {
+  protein_coding_ids <- readRDS(
+    file.path(deseq2_dir, "protein_coding_gene_ids.rds"))
+  if (!all(rownames(dds) %in% protein_coding_ids)) {
+    stop("The protein-coding DESeq2 object contains genes outside the selected biotype.")
+  }
+}
 
 resultsNames(dds)
 
@@ -145,12 +164,18 @@ saveRDS(all_shrunk_results, file.path(de_dir, "all_shrunk_results.rds"))
 write_csv(all_shrunk_results, file.path(de_dir, "all_shrunk_results.csv"))
 
 # gene annotation
-gtf <- import(file.path(paths$data, "reference", "gencode.v50.annotation.gtf.gz"))
+annotation_rds <- file.path(deseq2_dir, "gencode_v50_gene_annotation.rds")
 
-gene_annotation <- as.data.frame(gtf) |>
-  filter(type == "gene") |>
-  transmute(Geneid = gene_id, Ensembl = str_remove(gene_id, "\\.\\d+$"), gene_symbol = gene_name, gene_type = gene_type) |>
-  distinct(Geneid, .keep_all = TRUE)
+if (file.exists(annotation_rds)) {
+  gene_annotation <- readRDS(annotation_rds)
+} else {
+  gtf <- import(file.path(paths$data, "reference", "gencode.v50.annotation.gtf.gz"))
+
+  gene_annotation <- as.data.frame(gtf) |>
+    filter(type == "gene") |>
+    transmute(Geneid = gene_id, Ensembl = str_remove(gene_id, "\\.\\d+$"), gene_symbol = gene_name, gene_type = gene_type) |>
+    distinct(Geneid, .keep_all = TRUE)
+}
 
 all_shrunk_results_annotated <- all_shrunk_results |>
   left_join(gene_annotation, by = "Geneid")
@@ -349,7 +374,7 @@ print(heatmap_sample_check)
 top_deg_heatmap <- ComplexHeatmap::pheatmap(heatmap_matrix_z, color = heatmap_deg, breaks = heatmap_breaks,
   annotation_col = annotation_col, annotation_colors = annotation_colors, cluster_rows = TRUE, cluster_cols = FALSE,
   clustering_distance_rows = "correlation", clustering_method = "complete", show_rownames = TRUE, border_color = NA,
-  fontsize = 6.5, fontsize_row = 5.5, fontsize_col = 6.5, angle_col = 45, treeheight_row = 20, main = "Top differentially expressed genes",
+  fontsize = 6.5, fontsize_row = 5.5, fontsize_col = 6.5, angle_col = "45", treeheight_row = 20, main = "Top differentially expressed genes",
   name = "Z-score", heatmap_legend_param = list(at = c(-1.5, 0, 1.5), labels = c("-1.5", "0", "1.5"),
     legend_height = grid::unit(22, "mm"), legend_width = grid::unit(5, "mm"), border = black, title_position = "topleft"))
 
